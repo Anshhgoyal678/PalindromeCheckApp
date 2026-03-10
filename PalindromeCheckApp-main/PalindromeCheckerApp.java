@@ -3,64 +3,21 @@ import java.util.Scanner;
 
 class PalindromeCheckerApp {
 
-    static class Node {
-        char data;
-        Node next;
+    static boolean isPalindrome(String s, int start, int end) {
+        if (start >= end)
+            return true;
 
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
+        if (s.charAt(start) != s.charAt(end))
+            return false;
+
+        return isPalindrome(s, start + 1, end - 1);
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String word = sc.nextLine();
 
-        Node head = null, tail = null;
-
-        for (int i = 0; i < word.length(); i++) {
-            Node newNode = new Node(word.charAt(i));
-            if (head == null) {
-                head = tail = newNode;
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-            }
-        }
-
-        Node slow = head;
-        Node fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        Node prev = null;
-        Node curr = slow;
-
-        while (curr != null) {
-            Node next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
-        }
-
-        Node first = head;
-        Node second = prev;
-        boolean palindrome = true;
-
-        while (second != null) {
-            if (first.data != second.data) {
-                palindrome = false;
-                break;
-            }
-            first = first.next;
-            second = second.next;
-        }
-
-        if (palindrome)
+        if (isPalindrome(word, 0, word.length() - 1))
             System.out.println("Palindrome");
         else
             System.out.println("Not Palindrome");
