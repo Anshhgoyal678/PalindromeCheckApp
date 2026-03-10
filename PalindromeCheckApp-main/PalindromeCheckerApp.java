@@ -1,20 +1,49 @@
 
-import java.util.Scanner;
+import java.util.*;
+
+interface PalindromeStrategy {
+    boolean checkPalindrome(String word);
+}
+
+class StackStrategy implements PalindromeStrategy {
+    public boolean checkPalindrome(String word) {
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < word.length(); i++)
+            stack.push(word.charAt(i));
+
+        for (int i = 0; i < word.length(); i++)
+            if (word.charAt(i) != stack.pop())
+                return false;
+
+        return true;
+    }
+}
+
+class DequeStrategy implements PalindromeStrategy {
+    public boolean checkPalindrome(String word) {
+        Deque<Character> deque = new ArrayDeque<>();
+
+        for (int i = 0; i < word.length(); i++)
+            deque.addLast(word.charAt(i));
+
+        while (deque.size() > 1)
+            if (deque.removeFirst() != deque.removeLast())
+                return false;
+
+        return true;
+    }
+}
 
 class PalindromeChecker {
-    public boolean checkPalindrome(String word) {
-        char[] arr = word.toCharArray();
-        int start = 0;
-        int end = arr.length - 1;
+    private PalindromeStrategy strategy;
 
-        while (start < end) {
-            if (arr[start] != arr[end]) {
-                return false;
-            }
-            start++;
-            end--;
-        }
-        return true;
+    public PalindromeChecker(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean check(String word) {
+        return strategy.checkPalindrome(word);
     }
 }
 
@@ -23,9 +52,16 @@ class PalindromeCheckerApp {
         Scanner sc = new Scanner(System.in);
         String word = sc.nextLine();
 
-        PalindromeChecker checker = new PalindromeChecker();
+        PalindromeStrategy strategy;
 
-        if (checker.checkPalindrome(word))
+        if (word.length() % 2 == 0)
+            strategy = new StackStrategy();
+        else
+            strategy = new DequeStrategy();
+
+        PalindromeChecker checker = new PalindromeChecker(strategy);
+
+        if (checker.check(word))
             System.out.println("Palindrome");
         else
             System.out.println("Not Palindrome");
