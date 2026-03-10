@@ -1,29 +1,70 @@
 
-import java.util.Deque;
-import java.util.ArrayDeque;
+import java.util.Scanner;
 
 class PalindromeCheckerApp {
+
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
     public static void main(String[] args) {
-        String word = "madam";
-        Deque<Character> deque = new ArrayDeque<>();
+        Scanner sc = new Scanner(System.in);
+        String word = sc.nextLine();
+
+        Node head = null, tail = null;
 
         for (int i = 0; i < word.length(); i++) {
-            deque.addLast(word.charAt(i));
-        }
-
-        boolean palindrome = true;
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                palindrome = false;
-                break;
+            Node newNode = new Node(word.charAt(i));
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
         }
 
-        if (palindrome) {
-            System.out.println("Palindrome");
-        } else {
-            System.out.println("Not Palindrome");
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
+
+        Node prev = null;
+        Node curr = slow;
+
+        while (curr != null) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        Node first = head;
+        Node second = prev;
+        boolean palindrome = true;
+
+        while (second != null) {
+            if (first.data != second.data) {
+                palindrome = false;
+                break;
+            }
+            first = first.next;
+            second = second.next;
+        }
+
+        if (palindrome)
+            System.out.println("Palindrome");
+        else
+            System.out.println("Not Palindrome");
+
+        sc.close();
     }
 }
