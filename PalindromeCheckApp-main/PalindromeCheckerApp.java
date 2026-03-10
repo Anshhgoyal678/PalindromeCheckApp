@@ -1,23 +1,28 @@
-
+```java
 import java.util.Scanner;
 
 class PalindromeCheckerApp {
-
-    static boolean isPalindrome(String s, int start, int end) {
-        if (start >= end)
-            return true;
-
-        if (s.charAt(start) != s.charAt(end))
-            return false;
-
-        return isPalindrome(s, start + 1, end - 1);
-    }
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String word = sc.nextLine();
 
-        if (isPalindrome(word, 0, word.length() - 1))
+        String normalized = word.replaceAll("\\s+", "").toLowerCase();
+        char[] arr = normalized.toCharArray();
+
+        int start = 0;
+        int end = arr.length - 1;
+        boolean palindrome = true;
+
+        while (start < end) {
+            if (arr[start] != arr[end]) {
+                palindrome = false;
+                break;
+            }
+            start++;
+            end--;
+        }
+
+        if (palindrome)
             System.out.println("Palindrome");
         else
             System.out.println("Not Palindrome");
@@ -25,3 +30,4 @@ class PalindromeCheckerApp {
         sc.close();
     }
 }
+```
